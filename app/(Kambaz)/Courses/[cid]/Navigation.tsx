@@ -41,10 +41,7 @@ export default function CourseNavigation({ courseId }: CourseNavigationProps) {
         Grades
       </Link>
       <br />
-      <Link
-        href={`/Courses/${courseId}/People/Table`}
-        id="wd-course-people-link"
-      >
+      <Link href={`/Courses/${courseId}/People`} id="wd-course-people-link">
         People
       </Link>
       <br />

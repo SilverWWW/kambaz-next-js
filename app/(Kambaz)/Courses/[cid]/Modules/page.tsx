@@ -26,9 +26,51 @@ export default function Modules() {
         </li>
         <li className="wd-module">
           <div className="wd-title">Week 2</div>
+          <ul className="wd-lessons">
+            <li className="wd-lesson">
+              <span className="wd-title">LEARNING OBJECTIVES</span>
+              <ul className="wd-content">
+                <li className="wd-content-item">HTML Fundamentals</li>
+                <li className="wd-content-item">CSS Styling and Layout</li>
+              </ul>
+            </li>
+          </ul>
         </li>
         <li className="wd-module">
           <div className="wd-title">Week 3</div>
+          <ul className="wd-lessons">
+            <li className="wd-lesson">
+              <span className="wd-title">LEARNING OBJECTIVES</span>
+              <ul className="wd-content">
+                <li className="wd-content-item">JavaScript Basics</li>
+                <li className="wd-content-item">DOM Manipulation</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li className="wd-module">
+          <div className="wd-title">Week 4</div>
+          <ul className="wd-lessons">
+            <li className="wd-lesson">
+              <span className="wd-title">LEARNING OBJECTIVES</span>
+              <ul className="wd-content">
+                <li className="wd-content-item">React Components</li>
+                <li className="wd-content-item">State and Props</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li className="wd-module">
+          <div className="wd-title">Week 5</div>
+          <ul className="wd-lessons">
+            <li className="wd-lesson">
+              <span className="wd-title">LEARNING OBJECTIVES</span>
+              <ul className="wd-content">
+                <li className="wd-content-item">React Hooks</li>
+                <li className="wd-content-item">API Integration</li>
+              </ul>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
