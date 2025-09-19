@@ -25,6 +25,7 @@ export default function Labs() {
           </Link>{" "}
         </li>
       </ul>
+      <h2>Will Silver</h2>
     </div>
   );
 }
