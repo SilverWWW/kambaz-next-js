@@ -30,10 +30,6 @@ export default function KambazNavigation() {
         Labs
       </Link>
       <br />
-      <Link href="https://github.com/SilverWWW/kambaz-next-js" id="wd-github">
-        Github
-      </Link>
-      <br />
     </div>
   );
 }
