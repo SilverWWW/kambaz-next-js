@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 
 export default function Signin() {
   return (
@@ -13,15 +13,13 @@ export default function Signin() {
           type="password"
           className="mb-2"
         />
-        <Button
+        <Link
           id="wd-signin-btn"
-          variant="primary"
-          className="w-100 mb-2"
-          as={Link}
           href="/Account/Profile"
+          className="btn btn-primary w-100 mb-2 text-decoration-none"
         >
           Signin
-        </Button>
+        </Link>
         <Link
           id="wd-signup-link"
           href="/Account/Signup"

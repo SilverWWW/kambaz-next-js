@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 import { FaCalendarAlt } from "react-icons/fa";
 
 export default function Profile() {
@@ -53,15 +53,13 @@ export default function Profile() {
           defaultValue="User"
           className="mb-2"
         />
-        <Button
+        <Link
           id="wd-signout-btn"
-          variant="danger"
-          className="w-100"
-          as={Link}
           href="/Account/Signin"
+          className="btn btn-danger w-100 text-decoration-none"
         >
           Signout
-        </Button>
+        </Link>
       </div>
     </div>
   );
