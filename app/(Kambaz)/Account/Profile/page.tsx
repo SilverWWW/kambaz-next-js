@@ -1,40 +1,68 @@
 import Link from "next/link";
+import { FormControl, Button } from "react-bootstrap";
+import { FaCalendarAlt } from "react-icons/fa";
+
 export default function Profile() {
   return (
     <div id="wd-profile-screen">
-      <h3>Profile</h3>
-      <input
-        defaultValue="alice"
-        placeholder="username"
-        className="wd-username"
-      />
-      <br />
-      <input
-        defaultValue="123"
-        placeholder="password"
-        type="password"
-        className="wd-password"
-      />
-      <br />
-      <input defaultValue="Alice" placeholder="First Name" id="wd-firstname" />
-      <br />
-      <input
-        defaultValue="Wonderland"
-        placeholder="Last Name"
-        id="wd-lastname"
-      />
-      <br />
-      <input defaultValue="2000-01-01" type="date" id="wd-dob" />
-      <br />
-      <input defaultValue="alice@wonderland" type="email" id="wd-email" />
-      <br />
-      <select defaultValue="FACULTY" id="wd-role">
-        <option value="USER">User</option> <option value="ADMIN">Admin</option>
-        <option value="FACULTY">Faculty</option>{" "}
-        <option value="STUDENT">Student</option>
-      </select>
-      <br />
-      <Link href="Signin"> Sign out </Link>
+      <h1>Profile</h1>
+      <div style={{ maxWidth: "400px" }}>
+        <FormControl
+          id="wd-username"
+          placeholder="alice"
+          defaultValue="alice"
+          className="mb-2"
+        />
+        <FormControl
+          id="wd-password"
+          placeholder="123"
+          type="password"
+          defaultValue="123"
+          className="mb-2"
+        />
+        <FormControl
+          id="wd-first-name"
+          placeholder="Alice"
+          defaultValue="Alice"
+          className="mb-2"
+        />
+        <FormControl
+          id="wd-last-name"
+          placeholder="Wonderland"
+          defaultValue="Wonderland"
+          className="mb-2"
+        />
+        <div className="position-relative mb-2">
+          <FormControl
+            id="wd-birthday"
+            placeholder="mm/dd/yyyy"
+            defaultValue="01/01/1990"
+            className="pe-5"
+          />
+          <FaCalendarAlt className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" />
+        </div>
+        <FormControl
+          id="wd-email"
+          placeholder="alice@wonderland.com"
+          defaultValue="alice@wonderland.com"
+          className="mb-2"
+        />
+        <FormControl
+          id="wd-role"
+          placeholder="User"
+          defaultValue="User"
+          className="mb-2"
+        />
+        <Button
+          id="wd-signout-btn"
+          variant="danger"
+          className="w-100"
+          as={Link}
+          href="/Account/Signin"
+        >
+          Signout
+        </Button>
+      </div>
     </div>
   );
 }

@@ -1,56 +1,38 @@
-interface AssignmentsProps {
-  params: Promise<{ cid: string }>;
-}
+import AssignmentsControls from "./AssignmentsControls";
+import AssignmentsHeader from "./AssignmentsHeader";
+import AssignmentItem from "./AssignmentItem";
 
-export default async function Assignments({ params }: AssignmentsProps) {
-  const { cid } = await params;
-
+export default function Assignments() {
   return (
     <div id="wd-assignments">
-      <input placeholder="Search for Assignments" id="wd-search-assignment" />
-      <button id="wd-add-assignment-group">+ Group</button>
-      <button id="wd-add-assignment">+ Assignment</button>
-      <h3 id="wd-assignments-title">
-        ASSIGNMENTS 40% of Total <button>+</button>{" "}
-      </h3>
-      <ul id="wd-assignment-list">
-        <li className="wd-assignment-list-item">
-          <a
-            href={`/Courses/${cid}/Assignments/123`}
-            className="wd-assignment-link"
-          >
-            A1 - ENV + HTML
-          </a>
-          <div>
-            Multiple Modules | <strong>Not available until</strong> May 6 at
-            12:00am | <strong>Due</strong> May 13 at 11:59pm | 100 pts
-          </div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <a
-            href={`/Courses/${cid}/Assignments/124`}
-            className="wd-assignment-link"
-          >
-            A2 - CSS + BOOTSTRAP
-          </a>
-          <div>
-            Multiple Modules | <strong>Not available until</strong> May 13 at
-            12:00am | <strong>Due</strong> May 20 at 11:59pm | 100 pts
-          </div>
-        </li>
-        <li className="wd-assignment-list-item">
-          <a
-            href={`/Courses/${cid}/Assignments/125`}
-            className="wd-assignment-link"
-          >
-            A3 - JAVASCRIPT + REACT
-          </a>
-          <div>
-            Multiple Modules | <strong>Not available until</strong> May 20 at
-            12:00am | <strong>Due</strong> May 27 at 11:59pm | 100 pts
-          </div>
-        </li>
-      </ul>
+      <AssignmentsControls />
+      <AssignmentsHeader />
+      <div className="wd-assignments-list">
+        <AssignmentItem
+          title="A1 - ENV + HTML"
+          description="Multiple Modules"
+          availableDate="May 6 at 12:00am"
+          dueDate="May 13 at 11:59pm"
+          points={100}
+          assignmentId="A1"
+        />
+        <AssignmentItem
+          title="A2 - CSS + BOOTSTRAP"
+          description="Multiple Modules"
+          availableDate="May 13 at 12:00am"
+          dueDate="May 20 at 11:59pm"
+          points={100}
+          assignmentId="A2"
+        />
+        <AssignmentItem
+          title="A3 - JAVASCRIPT + REACT"
+          description="Multiple Modules"
+          availableDate="May 20 at 12:00am"
+          dueDate="May 27 at 11:59pm"
+          points={100}
+          assignmentId="A3"
+        />
+      </div>
     </div>
   );
 }
