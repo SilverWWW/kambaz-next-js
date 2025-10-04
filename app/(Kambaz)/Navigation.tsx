@@ -2,7 +2,7 @@
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
-import { FaInbox, FaUser, FaHistory, FaQuestionCircle } from "react-icons/fa";
+import { FaInbox, FaUser, FaQuestionCircle } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 import { BiBook } from "react-icons/bi";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
@@ -154,23 +154,23 @@ export default function KambazNavigation() {
       </ListGroupItem>
       <ListGroupItem
         className={`border-0 text-center ${
-          pathname === "/History" ? "bg-white" : "bg-black"
+          pathname === "/Labs" ? "bg-white" : "bg-black"
         }`}
       >
         <Link
-          href="/History"
-          id="wd-history-link"
+          href="/Labs"
+          id="wd-labs-link"
           className={`text-decoration-none ${
-            pathname === "/History" ? "text-danger" : "text-white"
+            pathname === "/Labs" ? "text-danger" : "text-white"
           }`}
         >
-          <FaHistory
+          <LiaBookSolid
             className={`fs-1 ${
-              pathname === "/History" ? "text-danger" : "text-danger"
+              pathname === "/Labs" ? "text-danger" : "text-danger"
             }`}
           />
           <br />
-          History
+          Labs
         </Link>
       </ListGroupItem>
       <ListGroupItem
