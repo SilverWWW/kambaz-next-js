@@ -1,3 +1,6 @@
+"use client";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import {
   Form,
   FormLabel,
@@ -10,8 +13,22 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { FaCalendarAlt, FaTimes } from "react-icons/fa";
+import * as db from "../../../../Database";
+
+interface Assignment {
+  _id: string;
+  title: string;
+  course: string;
+  description: string;
+  points: number;
+  dueDate: string;
+  availableDate: string;
+}
 
 export default function EditAssignment() {
+  const { cid, aid } = useParams();
+  const assignment = db.assignments.find((a: Assignment) => a._id === aid);
+
   return (
     <div id="wd-edit-assignment">
       <h1>Edit Assignment</h1>
@@ -19,7 +36,11 @@ export default function EditAssignment() {
       <Form>
         <div className="mb-3">
           <FormLabel>Assignment Name</FormLabel>
-          <FormControl type="text" defaultValue="A1" id="wd-assignment-name" />
+          <FormControl
+            type="text"
+            defaultValue={assignment?.title || ""}
+            id="wd-assignment-name"
+          />
         </div>
 
         <div className="mb-3">
@@ -27,7 +48,7 @@ export default function EditAssignment() {
           <FormControl
             as="textarea"
             rows={8}
-            defaultValue="Submit a link to the landing page of your Web application running on Vercel."
+            defaultValue={assignment?.description || ""}
             id="wd-assignment-description"
           />
         </div>
@@ -36,7 +57,7 @@ export default function EditAssignment() {
           <FormLabel>Points</FormLabel>
           <FormControl
             type="number"
-            defaultValue="100"
+            defaultValue={assignment?.points || 100}
             id="wd-assignment-points"
           />
         </div>
@@ -114,7 +135,7 @@ export default function EditAssignment() {
             <InputGroup>
               <FormControl
                 type="datetime-local"
-                defaultValue="2024-05-13T23:59"
+                defaultValue={assignment?.dueDate || "2024-05-13T23:59"}
                 id="wd-due-date"
               />
               <span className="input-group-text">
@@ -129,7 +150,7 @@ export default function EditAssignment() {
               <InputGroup>
                 <FormControl
                   type="datetime-local"
-                  defaultValue="2024-05-06T00:00"
+                  defaultValue={assignment?.availableDate || "2024-05-06T00:00"}
                   id="wd-available-from"
                 />
                 <span className="input-group-text">
@@ -150,12 +171,16 @@ export default function EditAssignment() {
         </div>
 
         <div className="d-flex justify-content-end gap-2 mt-4">
-          <Button variant="secondary" size="lg">
-            Cancel
-          </Button>
-          <Button variant="danger" size="lg">
-            Save
-          </Button>
+          <Link href={`/Courses/${cid}/Assignments`}>
+            <Button variant="secondary" size="lg">
+              Cancel
+            </Button>
+          </Link>
+          <Link href={`/Courses/${cid}/Assignments`}>
+            <Button variant="danger" size="lg">
+              Save
+            </Button>
+          </Link>
         </div>
       </Form>
     </div>

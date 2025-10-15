@@ -10,6 +10,7 @@ interface AssignmentItemProps {
   dueDate: string;
   points: number;
   assignmentId: string;
+  courseId: string;
 }
 
 export default function AssignmentItem({
@@ -19,6 +20,7 @@ export default function AssignmentItem({
   dueDate,
   points,
   assignmentId,
+  courseId,
 }: AssignmentItemProps) {
   return (
     <div className="wd-assignment-item border-start border-success border-4 p-3 mb-3 bg-white">
@@ -29,7 +31,7 @@ export default function AssignmentItem({
         </div>
         <div className="flex-fill">
           <Link
-            href={`/Courses/1234/Assignments/${assignmentId}`}
+            href={`/Courses/${courseId}/Assignments/${assignmentId}`}
             className="text-decoration-none"
           >
             <h5 className="mb-1 fw-bold text-dark">{title}</h5>

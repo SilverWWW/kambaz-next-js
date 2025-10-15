@@ -6,11 +6,12 @@ export default function AccountLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <div id="wd-account">
-      <AccountNavigation />
-      <div className="d-none d-md-block" style={{ marginLeft: "110px" }}>
-        {children}
+      <div className="d-flex">
+        <div className="d-none d-md-block">
+          <AccountNavigation />
+        </div>
+        <div className="flex-fill">{children}</div>
       </div>
-      <div className="d-md-none">{children}</div>
     </div>
   );
 }
