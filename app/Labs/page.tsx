@@ -20,7 +20,12 @@ export default function Labs() {
           </Link>
         </li>
         <li>
-          <Link href="/" id="wd-lab3-link">
+          <Link href="/Labs/Lab4" id="wd-lab4-link">
+            Lab 4: React Components{" "}
+          </Link>
+        </li>
+        <li>
+          <Link href="/" id="wd-kambaz-link">
             Kambaz{" "}
           </Link>{" "}
         </li>
