@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
-import * as db from "../../../Database";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "../../Assignments/reducer";
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentsHeader from "./AssignmentsHeader";
 import AssignmentItem from "./AssignmentItem";
@@ -9,11 +10,20 @@ interface Assignment {
   _id: string;
   title: string;
   course: string;
+  description: string;
+  points: number;
+  dueDate: string;
+  availableDate: string;
 }
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
+
+  const handleDeleteAssignment = (assignmentId: string) => {
+    dispatch(deleteAssignment(assignmentId));
+  };
 
   return (
     <div id="wd-assignments">
@@ -26,12 +36,13 @@ export default function Assignments() {
             <AssignmentItem
               key={assignment._id}
               title={assignment.title}
-              description="Multiple Modules"
-              availableDate="May 6 at 12:00am"
-              dueDate="May 13 at 11:59pm"
-              points={100}
+              description={assignment.description}
+              availableDate={assignment.availableDate}
+              dueDate={assignment.dueDate}
+              points={assignment.points}
               assignmentId={assignment._id}
               courseId={cid as string}
+              onDelete={handleDeleteAssignment}
             />
           ))}
       </div>

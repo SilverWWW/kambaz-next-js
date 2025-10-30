@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import CourseNavigation from "./Navigation";
 import Breadcrumb from "./Breadcrumb";
+import CourseProtection from "./CourseProtection";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
   const { cid } = useParams();
@@ -13,22 +14,24 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
   const [sidebarVisible, setSidebarVisible] = useState(true);
 
   return (
-    <div id="wd-courses">
-      <h2 className="text-danger">
-        <FaAlignJustify
-          className="me-4 fs-4 mb-1"
-          onClick={() => setSidebarVisible(!sidebarVisible)}
-          style={{ cursor: "pointer" }}
-        />
-        <Breadcrumb course={course} />
-      </h2>
-      <hr />
-      <div className="d-flex">
-        <div className={sidebarVisible ? "d-none d-md-block" : "d-none"}>
-          <CourseNavigation courseId={cid} />
+    <CourseProtection courseId={cid as string}>
+      <div id="wd-courses">
+        <h2 className="text-danger">
+          <FaAlignJustify
+            className="me-4 fs-4 mb-1"
+            onClick={() => setSidebarVisible(!sidebarVisible)}
+            style={{ cursor: "pointer" }}
+          />
+          <Breadcrumb course={course} />
+        </h2>
+        <hr />
+        <div className="d-flex">
+          <div className={sidebarVisible ? "d-none d-md-block" : "d-none"}>
+            <CourseNavigation courseId={cid} />
+          </div>
+          <div className="flex-fill">{children}</div>
         </div>
-        <div className="flex-fill">{children}</div>
       </div>
-    </div>
+    </CourseProtection>
   );
 }

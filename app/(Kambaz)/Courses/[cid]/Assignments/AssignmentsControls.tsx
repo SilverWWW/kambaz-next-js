@@ -1,7 +1,11 @@
 import { Button, FormControl, InputGroup } from "react-bootstrap";
 import { FaPlus, FaSearch } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function AssignmentsControls() {
+  const router = useRouter();
+  const { cid } = useParams();
   return (
     <div
       id="wd-assignments-controls"
@@ -23,7 +27,12 @@ export default function AssignmentsControls() {
           <FaPlus className="me-2" />
           Group
         </Button>
-        <Button variant="danger" size="lg" className="text-nowrap">
+        <Button
+          variant="danger"
+          size="lg"
+          className="text-nowrap"
+          onClick={() => router.push(`/Courses/${cid}/Assignments/Editor`)}
+        >
           <FaPlus className="me-2" />
           Assignment
         </Button>
