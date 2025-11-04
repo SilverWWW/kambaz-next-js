@@ -9,12 +9,13 @@ import CourseProtection from "./CourseProtection";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
   const { cid } = useParams();
+  const courseId = Array.isArray(cid) ? cid[0] : cid || "";
   const { courses } = useSelector((state: any) => state.coursesReducer);
-  const course = courses.find((course: any) => course._id === cid);
+  const course = courses.find((course: any) => course._id === courseId);
   const [sidebarVisible, setSidebarVisible] = useState(true);
 
   return (
-    <CourseProtection courseId={cid as string}>
+    <CourseProtection courseId={courseId}>
       <div id="wd-courses">
         <h2 className="text-danger">
           <FaAlignJustify
@@ -27,7 +28,7 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
         <hr />
         <div className="d-flex">
           <div className={sidebarVisible ? "d-none d-md-block" : "d-none"}>
-            <CourseNavigation courseId={cid} />
+            <CourseNavigation courseId={courseId} />
           </div>
           <div className="flex-fill">{children}</div>
         </div>
