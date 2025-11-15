@@ -13,4 +13,5 @@ const store = configureStore({
     accountReducer,
   },
 });
+export type RootState = ReturnType<typeof store.getState>;
 export default store;

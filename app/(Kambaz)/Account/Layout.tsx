@@ -7,7 +7,7 @@ export default function AccountLayout({
   return (
     <div id="wd-account">
       <div className="d-flex">
-        <div className="d-none d-md-block">
+        <div>
           <AccountNavigation />
         </div>
         <div className="flex-fill">{children}</div>

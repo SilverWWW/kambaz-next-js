@@ -15,7 +15,8 @@ import {
 } from "react-bootstrap";
 import { FaCalendarAlt, FaTimes } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { updateAssignment } from "../../../Assignments/reducer";
+import { setAssignments } from "../../../Assignments/reducer";
+import * as client from "../../../Assignments/client";
 
 interface Assignment {
   _id: string;
@@ -32,7 +33,6 @@ export default function EditAssignment() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-  const assignment = assignments.find((a: Assignment) => a._id === aid);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -43,30 +43,36 @@ export default function EditAssignment() {
   });
 
   useEffect(() => {
-    if (assignment) {
-      setFormData({
-        title: assignment.title,
-        description: assignment.description,
-        points: assignment.points,
-        dueDate: assignment.dueDate ? assignment.dueDate.slice(0, 16) : "",
-        availableDate: assignment.availableDate
-          ? assignment.availableDate.slice(0, 16)
-          : "",
-      });
+    const fetchAssignment = async () => {
+      const assignment = await client.findAssignmentById(aid as string);
+      if (assignment) {
+        setFormData({
+          title: assignment.title,
+          description: assignment.description,
+          points: assignment.points,
+          dueDate: assignment.dueDate ? assignment.dueDate.slice(0, 16) : "",
+          availableDate: assignment.availableDate
+            ? assignment.availableDate.slice(0, 16)
+            : "",
+        });
+      }
+    };
+    if (aid) {
+      fetchAssignment();
     }
-  }, [assignment]);
+  }, [aid]);
 
-  const handleSave = () => {
-    if (assignment) {
-      dispatch(
-        updateAssignment({
-          ...assignment,
-          ...formData,
-          course: cid,
-        })
-      );
-      router.push(`/Courses/${cid}/Assignments`);
-    }
+  const handleSave = async () => {
+    const updatedAssignment = await client.updateAssignment({
+      _id: aid as string,
+      ...formData,
+      course: cid,
+    });
+    const newAssignments = assignments.map((a: any) =>
+      a._id === updatedAssignment._id ? updatedAssignment : a
+    );
+    dispatch(setAssignments(newAssignments));
+    router.push(`/Courses/${cid}/Assignments`);
   };
 
   return (

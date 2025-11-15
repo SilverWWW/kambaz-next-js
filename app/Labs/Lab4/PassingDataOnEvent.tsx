@@ -8,7 +8,6 @@ export default function PassingDataOnEvent() {
       <h2>Passing Data on Event</h2>
       <button
         onClick={() => add(2, 3)}
-        // onClick={add(2, 3)}
         className="btn btn-primary"
         id="wd-pass-data-click"
       >

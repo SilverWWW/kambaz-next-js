@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 export default function Counter() {
-  //let count = 7;
   const [count, setCount] = useState(7);
   console.log(count);
   return (

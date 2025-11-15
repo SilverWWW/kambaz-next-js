@@ -1,7 +1,9 @@
 "use client";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "../../Assignments/reducer";
+import { setAssignments } from "../../Assignments/reducer";
+import * as client from "../../Assignments/client";
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentsHeader from "./AssignmentsHeader";
 import AssignmentItem from "./AssignmentItem";
@@ -21,8 +23,18 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
-  const handleDeleteAssignment = (assignmentId: string) => {
-    dispatch(deleteAssignment(assignmentId));
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [cid]);
+
+  const handleDeleteAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
   };
 
   return (
@@ -31,7 +43,6 @@ export default function Assignments() {
       <AssignmentsHeader />
       <div className="wd-assignments-list">
         {assignments
-          .filter((assignment: Assignment) => assignment.course === cid)
           .map((assignment: Assignment) => (
             <AssignmentItem
               key={assignment._id}

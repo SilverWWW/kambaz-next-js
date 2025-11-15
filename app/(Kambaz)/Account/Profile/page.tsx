@@ -1,23 +1,35 @@
 "use client";
-import { redirect } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { Button, FormControl } from "react-bootstrap";
+import * as client from "../client";
+import { RootState } from "../../store";
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const router = useRouter();
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
   const fetchProfile = () => {
-    if (!currentUser) return redirect("/Account/Signin");
+    if (!currentUser) {
+      router.push("/Account/Signin");
+      return;
+    }
     setProfile(currentUser);
   };
 
-  const signout = () => {
+  const updateProfile = async () => {
+    const updatedProfile = await client.updateUser(profile);
+    dispatch(setCurrentUser(updatedProfile));
+  };
+
+  const signout = async () => {
+    await client.signout();
     dispatch(setCurrentUser(null));
-    redirect("/Account/Signin");
+    router.push("/Account/Signin");
   };
 
   useEffect(() => {
@@ -25,7 +37,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <div className="wd-profile-screen">
+    <div id="wd-profile-screen">
       <h3>Profile</h3>
       {profile && (
         <div style={{ maxWidth: "400px" }}>
@@ -77,6 +89,7 @@ export default function Profile() {
           <select
             className="form-control mb-2"
             id="wd-role"
+            defaultValue={profile.role}
             onChange={(e) => setProfile({ ...profile, role: e.target.value })}
           >
             <option value="USER">User</option>
@@ -84,9 +97,14 @@ export default function Profile() {
             <option value="FACULTY">Faculty</option>
             <option value="STUDENT">Student</option>
           </select>
-          <Button onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
-            Sign out
-          </Button>
+          <div>
+            <button onClick={updateProfile} className="btn btn-primary w-100 mb-2">
+              Update
+            </button>
+            <button onClick={signout} className="wd-signout-btn btn btn-danger w-100">
+              Sign out
+            </button>
+          </div>
         </div>
       )}
     </div>

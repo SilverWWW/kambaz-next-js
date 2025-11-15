@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { addAssignment, updateAssignment } from "../../../Assignments/reducer";
+import { setAssignments } from "../../../Assignments/reducer";
+import * as client from "../../../Assignments/client";
 import { Button, FormControl, FormLabel, FormGroup } from "react-bootstrap";
 
 export default function AssignmentEditor() {
@@ -26,46 +27,48 @@ export default function AssignmentEditor() {
 
   useEffect(() => {
     if (isEditing && assignmentId) {
-      const existingAssignment = assignments.find(
-        (a: any) => a._id === assignmentId
-      );
-      if (existingAssignment) {
-        setAssignment({
-          _id: existingAssignment._id,
-          title: existingAssignment.title,
-          description: existingAssignment.description,
-          points: existingAssignment.points,
-          dueDate: existingAssignment.dueDate
-            ? existingAssignment.dueDate.slice(0, 16)
-            : "",
-          availableDate: existingAssignment.availableDate
-            ? existingAssignment.availableDate.slice(0, 16)
-            : "",
-        });
-      }
+      const fetchAssignment = async () => {
+        const existingAssignment = await client.findAssignmentById(assignmentId);
+        if (existingAssignment) {
+          setAssignment({
+            _id: existingAssignment._id,
+            title: existingAssignment.title,
+            description: existingAssignment.description,
+            points: existingAssignment.points,
+            dueDate: existingAssignment.dueDate
+              ? existingAssignment.dueDate.slice(0, 16)
+              : "",
+            availableDate: existingAssignment.availableDate
+              ? existingAssignment.availableDate.slice(0, 16)
+              : "",
+          });
+        }
+      };
+      fetchAssignment();
     }
-  }, [isEditing, assignmentId, assignments]);
+  }, [isEditing, assignmentId]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!assignment.title || !assignment.description) {
       alert("Please fill in all required fields");
       return;
     }
 
     if (isEditing) {
-      dispatch(
-        updateAssignment({
-          ...assignment,
-          course: cid,
-        })
+      const updatedAssignment = await client.updateAssignment({
+        ...assignment,
+        course: cid,
+      });
+      const newAssignments = assignments.map((a: any) =>
+        a._id === updatedAssignment._id ? updatedAssignment : a
       );
+      dispatch(setAssignments(newAssignments));
     } else {
-      dispatch(
-        addAssignment({
-          ...assignment,
-          course: cid,
-        })
-      );
+      const newAssignment = await client.createAssignmentForCourse(cid as string, {
+        ...assignment,
+        course: cid,
+      });
+      dispatch(setAssignments([...assignments, newAssignment]));
     }
 
     router.push(`/Courses/${cid}/Assignments`);
