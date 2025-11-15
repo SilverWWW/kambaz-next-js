@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+interface User {
+  _id: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: string;
+  [key: string]: any;
+}
+
+const initialState: { currentUser: User | null } = {
   currentUser: null,
 };
 

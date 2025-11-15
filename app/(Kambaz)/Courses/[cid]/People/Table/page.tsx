@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Table, Button, Modal, FormControl, FormLabel, FormGroup } from "react-bootstrap";
@@ -39,14 +39,14 @@ export default function PeopleTable() {
     section: "",
   });
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     const enrolledUsers = await client.findUsersEnrolledInCourse(cid as string);
     setUsers(enrolledUsers);
-  };
+  }, [cid]);
 
   useEffect(() => {
     fetchUsers();
-  }, [cid]);
+  }, [fetchUsers]);
 
   const handleCreateUser = () => {
     setEditingUser(null);

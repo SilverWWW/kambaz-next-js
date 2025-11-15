@@ -1,9 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
-import { Button, FormControl } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 import * as client from "../client";
 import { RootState } from "../../store";
 
@@ -13,13 +13,13 @@ export default function Profile() {
   const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
-  const fetchProfile = () => {
+  const fetchProfile = useCallback(() => {
     if (!currentUser) {
       router.push("/Account/Signin");
       return;
     }
     setProfile(currentUser);
-  };
+  }, [currentUser, router]);
 
   const updateProfile = async () => {
     const updatedProfile = await client.updateUser(profile);
@@ -34,7 +34,7 @@ export default function Profile() {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [fetchProfile]);
 
   return (
     <div id="wd-profile-screen">

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Row,
@@ -12,7 +12,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewCourse, deleteCourse, updateCourse, setCourses } from "../Courses/reducer";
+import { setCourses } from "../Courses/reducer";
 import { setEnrollments } from "../Enrollments/reducer";
 import * as client from "../Courses/client";
 import * as enrollmentsClient from "../Enrollments/client";
@@ -21,16 +21,11 @@ import { RootState } from "../store";
 interface Course {
   _id: string;
   name: string;
-  number: string;
-  startDate: string;
-  endDate: string;
-  image: string;
-  description: string;
-}
-
-interface User {
-  _id: string;
-  role: string;
+  number?: string;
+  startDate?: string;
+  endDate?: string;
+  image?: string;
+  description?: string;
 }
 
 interface Enrollment {
@@ -58,7 +53,7 @@ export default function Dashboard() {
     description: "New Description",
   });
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     if (!currentUser) {
       dispatch(setCourses([]));
       return;
@@ -73,9 +68,9 @@ export default function Dashboard() {
         console.error(error);
       }
     }
-  };
+  }, [currentUser, dispatch]);
 
-  const fetchEnrollments = async () => {
+  const fetchEnrollments = useCallback(async () => {
     if (!currentUser) {
       dispatch(setEnrollments([]));
       return;
@@ -90,12 +85,12 @@ export default function Dashboard() {
         console.error(error);
       }
     }
-  };
+  }, [currentUser, dispatch]);
 
   useEffect(() => {
     fetchCourses();
     fetchEnrollments();
-  }, [currentUser]);
+  }, [fetchCourses, fetchEnrollments]);
 
   const onAddNewCourse = async () => {
     const newCourse = await client.createCourse(course);
@@ -104,7 +99,7 @@ export default function Dashboard() {
 
   const onDeleteCourse = async (courseId: string) => {
     await client.deleteCourse(courseId);
-    dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
+    dispatch(setCourses(courses.filter((c) => c._id !== courseId)));
   };
 
   const onUpdateCourse = async () => {

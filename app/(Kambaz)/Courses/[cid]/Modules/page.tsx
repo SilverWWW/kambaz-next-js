@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { ListGroup, ListGroupItem, FormControl } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { setModules, editModule, updateModule } from "./reducer";
 import * as client from "../../client";
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
@@ -33,14 +33,14 @@ export default function Modules() {
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
 
-  const fetchModules = async () => {
+  const fetchModules = useCallback(async () => {
     const modules = await client.findModulesForCourse(cid as string);
     dispatch(setModules(modules));
-  };
+  }, [cid, dispatch]);
 
   useEffect(() => {
     fetchModules();
-  }, [cid]);
+  }, [fetchModules]);
 
   const onCreateModuleForCourse = async () => {
     if (!cid) return;
