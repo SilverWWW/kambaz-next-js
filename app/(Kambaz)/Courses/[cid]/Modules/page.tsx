@@ -45,8 +45,8 @@ export default function Modules() {
   const onCreateModuleForCourse = async () => {
     if (!cid) return;
     const newModule = { name: moduleName, course: cid };
-    const module = await client.createModuleForCourse(cid as string, newModule);
-    dispatch(setModules([...modules, module]));
+    const createdModule = await client.createModuleForCourse(cid as string, newModule);
+    dispatch(setModules([...modules, createdModule]));
     setModuleName("");
   };
 
@@ -55,9 +55,9 @@ export default function Modules() {
     dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
   };
 
-  const onUpdateModule = async (module: any) => {
-    await client.updateModule(module);
-    const newModules = modules.map((m: any) => (m._id === module._id ? module : m));
+  const onUpdateModule = async (moduleData: any) => {
+    await client.updateModule(moduleData);
+    const newModules = modules.map((m: any) => (m._id === moduleData._id ? moduleData : m));
     dispatch(setModules(newModules));
   };
 
