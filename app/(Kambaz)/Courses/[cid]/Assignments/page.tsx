@@ -21,6 +21,7 @@ interface Assignment {
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
   const fetchAssignments = useCallback(async () => {
@@ -37,9 +38,11 @@ export default function Assignments() {
     dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
   };
 
+  const isFaculty = currentUser && currentUser.role === "FACULTY";
+
   return (
     <div id="wd-assignments">
-      <AssignmentsControls />
+      {isFaculty && <AssignmentsControls />}
       <AssignmentsHeader />
       <div className="wd-assignments-list">
         {assignments
@@ -54,6 +57,7 @@ export default function Assignments() {
               assignmentId={assignment._id}
               courseId={cid as string}
               onDelete={handleDeleteAssignment}
+              isFaculty={isFaculty}
             />
           ))}
       </div>

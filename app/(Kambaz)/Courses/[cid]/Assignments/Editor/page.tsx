@@ -12,6 +12,7 @@ export default function AssignmentEditor() {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const assignmentId = searchParams.get("id");
   const isEditing = !!assignmentId;
@@ -77,6 +78,16 @@ export default function AssignmentEditor() {
   const handleCancel = () => {
     router.push(`/Courses/${cid}/Assignments`);
   };
+
+  useEffect(() => {
+    if (currentUser && currentUser.role !== "FACULTY") {
+      router.push(`/Courses/${cid}/Assignments`);
+    }
+  }, [currentUser, router, cid]);
+
+  if (!currentUser || currentUser.role !== "FACULTY") {
+    return null;
+  }
 
   return (
     <div className="wd-assignment-editor">

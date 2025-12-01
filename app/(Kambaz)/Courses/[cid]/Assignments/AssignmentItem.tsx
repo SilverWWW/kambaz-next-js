@@ -15,6 +15,7 @@ interface AssignmentItemProps {
   assignmentId: string;
   courseId: string;
   onDelete: (assignmentId: string) => void;
+  isFaculty?: boolean;
 }
 
 export default function AssignmentItem({
@@ -26,6 +27,7 @@ export default function AssignmentItem({
   assignmentId,
   courseId,
   onDelete,
+  isFaculty = false,
 }: AssignmentItemProps) {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -52,12 +54,14 @@ export default function AssignmentItem({
       <div className="d-flex align-items-start">
         <div className="d-flex align-items-center me-3">
           <BsGripVertical className="me-2 fs-4 text-muted" />
-          <MdEdit
-            className="fs-4 text-muted"
-            style={{ cursor: "pointer" }}
-            onClick={handleEdit}
-            title="Edit Assignment"
-          />
+          {isFaculty && (
+            <MdEdit
+              className="fs-4 text-muted"
+              style={{ cursor: "pointer" }}
+              onClick={handleEdit}
+              title="Edit Assignment"
+            />
+          )}
         </div>
         <div className="flex-fill">
           <Link
@@ -73,12 +77,14 @@ export default function AssignmentItem({
         </div>
         <div className="d-flex align-items-center">
           <FaCheckCircle className="text-success fs-5 me-2" />
-          <FaTrash
-            className="text-danger fs-5 me-2"
-            style={{ cursor: "pointer" }}
-            onClick={handleDeleteClick}
-            title="Delete Assignment"
-          />
+          {isFaculty && (
+            <FaTrash
+              className="text-danger fs-5 me-2"
+              style={{ cursor: "pointer" }}
+              onClick={handleDeleteClick}
+              title="Delete Assignment"
+            />
+          )}
           <BsThreeDotsVertical className="fs-4 text-muted" />
         </div>
       </div>

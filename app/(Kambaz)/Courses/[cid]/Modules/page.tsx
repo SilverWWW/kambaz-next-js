@@ -31,6 +31,7 @@ export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
   const fetchModules = useCallback(async () => {
@@ -61,13 +62,17 @@ export default function Modules() {
     dispatch(setModules(newModules));
   };
 
+  const isFaculty = currentUser && currentUser.role === "FACULTY";
+
   return (
     <div className="wd-modules">
-      <ModulesControls
-        moduleName={moduleName}
-        setModuleName={setModuleName}
-        addModule={onCreateModuleForCourse}
-      />
+      {isFaculty && (
+        <ModulesControls
+          moduleName={moduleName}
+          setModuleName={setModuleName}
+          addModule={onCreateModuleForCourse}
+        />
+      )}
       <br />
       <br />
       <br />
@@ -81,7 +86,7 @@ export default function Modules() {
               <div className="wd-title p-3 ps-2 bg-secondary">
                 <BsGripVertical className="me-2 fs-3" />
                 {!module.editing && module.name}
-                {module.editing && (
+                {module.editing && isFaculty && (
                   <FormControl
                     className="w-50 d-inline-block"
                     value={module.name}
@@ -97,11 +102,13 @@ export default function Modules() {
                     }}
                   />
                 )}
-                <ModuleControlButtons
-                  moduleId={module._id}
-                  deleteModule={(moduleId) => onRemoveModule(moduleId)}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))}
-                />
+                {isFaculty && (
+                  <ModuleControlButtons
+                    moduleId={module._id}
+                    deleteModule={(moduleId) => onRemoveModule(moduleId)}
+                    editModule={(moduleId) => dispatch(editModule(moduleId))}
+                  />
+                )}
               </div>
               {module.lessons && (
                 <ListGroup className="wd-lessons rounded-0">

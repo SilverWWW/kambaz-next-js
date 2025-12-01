@@ -23,6 +23,7 @@ export default function EditAssignment() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -64,6 +65,16 @@ export default function EditAssignment() {
     dispatch(setAssignments(newAssignments));
     router.push(`/Courses/${cid}/Assignments`);
   };
+
+  useEffect(() => {
+    if (currentUser && currentUser.role !== "FACULTY") {
+      router.push(`/Courses/${cid}/Assignments`);
+    }
+  }, [currentUser, router, cid]);
+
+  if (!currentUser || currentUser.role !== "FACULTY") {
+    return null;
+  }
 
   return (
     <div id="wd-edit-assignment">
