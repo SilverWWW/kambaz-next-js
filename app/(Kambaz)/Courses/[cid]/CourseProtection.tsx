@@ -19,7 +19,6 @@ export default function CourseProtection({
 
   const isUserEnrolled = useCallback(() => {
     if (!currentUser) return false;
-    if (currentUser.role === "FACULTY") return true;
     const isInCourses = courses.some((course: any) => course._id === courseId);
     const isInEnrollments = enrollments.some(
       (enrollment: any) =>

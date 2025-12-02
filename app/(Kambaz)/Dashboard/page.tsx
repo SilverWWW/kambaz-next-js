@@ -136,7 +136,6 @@ export default function Dashboard() {
 
   const isUserEnrolled = (courseId: string) => {
     if (!currentUser) return false;
-    if (currentUser.role === "FACULTY") return true;
     const isInCourses = courses.some((course: Course) => course._id === courseId);
     const isInEnrollments = enrollments.some(
       (enrollment: Enrollment) =>
@@ -276,8 +275,7 @@ export default function Dashboard() {
                   </CardText>
 
                   <div className="d-flex flex-column gap-2">
-                    {isUserEnrolled(course._id) ||
-                    (currentUser && currentUser.role === "FACULTY") ? (
+                    {isUserEnrolled(course._id) ? (
                       <Link
                         href={`/Courses/${course._id}/Home`}
                         className="wd-dashboard-course-link text-decoration-none"
