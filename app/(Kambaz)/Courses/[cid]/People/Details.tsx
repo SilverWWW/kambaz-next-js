@@ -33,9 +33,14 @@ export default function PeopleDetails({
   }, [uid]);
 
   const deleteUser = async (userId: string) => {
-    await client.deleteUser(userId);
-    fetchUsers();
-    onClose();
+    try {
+      await client.deleteUser(userId);
+      fetchUsers();
+      onClose();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Failed to delete user. Please try again.");
+    }
   };
 
   const saveUser = async () => {
@@ -139,7 +144,11 @@ export default function PeopleDetails({
       <b>Total Activity:</b> <span className="wd-total-activity">{user.totalActivity}</span>
       <hr />
       <button
-        onClick={() => deleteUser(uid)}
+        onClick={() => {
+          if (uid) {
+            deleteUser(uid);
+          }
+        }}
         className="btn btn-danger float-end wd-delete"
       >
         Delete
