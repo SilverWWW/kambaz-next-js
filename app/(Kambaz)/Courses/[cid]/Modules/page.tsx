@@ -52,14 +52,24 @@ export default function Modules() {
   };
 
   const onRemoveModule = async (moduleId: string) => {
-    await client.deleteModule(moduleId);
-    dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
+    try {
+      await client.deleteModule(cid as string, moduleId);
+      await fetchModules();
+    } catch (error) {
+      console.error("Error deleting module:", error);
+      alert("Failed to delete module. Please try again.");
+    }
   };
 
   const onUpdateModule = async (moduleData: any) => {
-    await client.updateModule(moduleData);
-    const newModules = modules.map((m: any) => (m._id === moduleData._id ? moduleData : m));
-    dispatch(setModules(newModules));
+    try {
+      const { editing, ...moduleToUpdate } = moduleData;
+      await client.updateModule(cid as string, moduleToUpdate);
+      await fetchModules();
+    } catch (error) {
+      console.error("Error updating module:", error);
+      alert("Failed to update module. Please try again.");
+    }
   };
 
   const isFaculty = currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN");
@@ -95,9 +105,10 @@ export default function Modules() {
                         updateModule({ ...module, name: e.target.value })
                       )
                     }
-                    onKeyDown={(e) => {
+                    onKeyDown={async (e) => {
                       if (e.key === "Enter") {
-                        onUpdateModule({ ...module, editing: false });
+                        const updatedModule = { ...module, editing: false };
+                        await onUpdateModule(updatedModule);
                       }
                     }}
                   />
@@ -107,6 +118,11 @@ export default function Modules() {
                     moduleId={module._id}
                     deleteModule={(moduleId) => onRemoveModule(moduleId)}
                     editModule={(moduleId) => dispatch(editModule(moduleId))}
+                    updateModule={async () => {
+                      const updatedModule = { ...module, editing: false };
+                      await onUpdateModule(updatedModule);
+                    }}
+                    isEditing={module.editing}
                   />
                 )}
               </div>
