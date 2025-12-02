@@ -14,7 +14,7 @@ export default function ModuleControlButtons({
   moduleId: string;
   deleteModule: (moduleId: string) => void;
   editModule: (moduleId: string) => void;
-  updateModule?: (module: any) => void;
+  updateModule?: () => void;
   isEditing?: boolean;
 }) {
   return (
