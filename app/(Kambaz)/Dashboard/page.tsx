@@ -114,8 +114,22 @@ export default function Dashboard() {
   }, [fetchCourses, fetchEnrollments, fetchAllCourses, showAllCourses]);
 
   const onAddNewCourse = async () => {
-    const newCourse = await client.createCourse(course);
-    dispatch(setCourses([...courses, newCourse]));
+    try {
+      await client.createCourse(course);
+      await fetchCourses();
+      setCourse({
+        _id: "0",
+        name: "New Course",
+        number: "New Number",
+        startDate: "2023-09-10",
+        endDate: "2023-12-15",
+        image: "/images/reactjs.jpg",
+        description: "New Description",
+      });
+    } catch (error: any) {
+      console.error("Error creating course:", error);
+      alert("Failed to create course. Please try again.");
+    }
   };
 
   const onDeleteCourse = async (courseId: string) => {
