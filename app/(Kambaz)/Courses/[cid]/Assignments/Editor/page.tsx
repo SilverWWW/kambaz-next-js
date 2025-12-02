@@ -81,12 +81,12 @@ export default function AssignmentEditor() {
   };
 
   useEffect(() => {
-    if (currentUser && currentUser.role !== "FACULTY") {
+    if (currentUser && currentUser.role !== "FACULTY" && currentUser.role !== "ADMIN") {
       router.push(`/Courses/${cid}/Assignments`);
     }
   }, [currentUser, router, cid]);
 
-  if (!currentUser || currentUser.role !== "FACULTY") {
+  if (!currentUser || (currentUser.role !== "FACULTY" && currentUser.role !== "ADMIN")) {
     return null;
   }
 

@@ -62,7 +62,7 @@ export default function Modules() {
     dispatch(setModules(newModules));
   };
 
-  const isFaculty = currentUser && currentUser.role === "FACULTY";
+  const isFaculty = currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN");
 
   return (
     <div className="wd-modules">

@@ -42,7 +42,7 @@ export default function Assignments() {
     }
   };
 
-  const isFaculty = currentUser && currentUser.role === "FACULTY";
+  const isFaculty = currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN");
 
   return (
     <div id="wd-assignments">

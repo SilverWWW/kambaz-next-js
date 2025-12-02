@@ -199,7 +199,7 @@ export default function Dashboard() {
         )}
       </div>
       <hr />
-      {currentUser && currentUser.role === "FACULTY" && (
+      {currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN") && (
         <>
           <h5>
             New Course
@@ -305,7 +305,7 @@ export default function Dashboard() {
                       </Button>
                     )}
 
-                    {currentUser && currentUser.role === "FACULTY" && (
+                    {currentUser && (currentUser.role === "FACULTY" || currentUser.role === "ADMIN") && (
                       <div className="d-flex gap-1">
                         <Button
                           id="wd-edit-course-click"

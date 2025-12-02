@@ -25,7 +25,7 @@ interface User {
 export default function PeopleTable() {
   const { cid } = useParams();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
   
   const [users, setUsers] = useState<User[]>([]);
   const [showModal, setShowModal] = useState(false);
