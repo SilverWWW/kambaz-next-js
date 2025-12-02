@@ -14,24 +14,31 @@ export default function CourseProtection({
 }: CourseProtectionProps) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
+  const { courses } = useSelector((state: any) => state.coursesReducer);
   const router = useRouter();
 
   const isUserEnrolled = useCallback(() => {
     if (!currentUser) return false;
     if (currentUser.role === "FACULTY") return true;
-    return enrollments.some(
+    const isInCourses = courses.some((course: any) => course._id === courseId);
+    const isInEnrollments = enrollments.some(
       (enrollment: any) =>
         enrollment.user === currentUser._id && enrollment.course === courseId
     );
-  }, [currentUser, enrollments, courseId]);
+    return isInCourses || isInEnrollments;
+  }, [currentUser, courses, enrollments, courseId]);
 
   useEffect(() => {
-    if (currentUser && !isUserEnrolled()) {
+    if (currentUser && (courses.length > 0 || enrollments.length > 0) && !isUserEnrolled()) {
       router.push("/Dashboard");
     }
-  }, [currentUser, isUserEnrolled, router]);
+  }, [currentUser, courses, enrollments, isUserEnrolled, router]);
 
   if (!currentUser) {
+    return null;
+  }
+
+  if (courses.length === 0 && enrollments.length === 0) {
     return null;
   }
 

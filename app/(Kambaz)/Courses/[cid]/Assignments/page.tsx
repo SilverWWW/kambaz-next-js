@@ -34,8 +34,12 @@ export default function Assignments() {
   }, [fetchAssignments]);
 
   const handleDeleteAssignment = async (assignmentId: string) => {
-    await client.deleteAssignment(assignmentId);
-    dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
+    try {
+      await client.deleteAssignment(assignmentId);
+      await fetchAssignments();
+    } catch (error) {
+      console.error("Error deleting assignment:", error);
+    }
   };
 
   const isFaculty = currentUser && currentUser.role === "FACULTY";

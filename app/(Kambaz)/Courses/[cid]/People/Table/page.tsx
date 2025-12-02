@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Table, Button, Modal, FormControl, FormLabel, FormGroup } from "react-bootstrap";
 import { FaUserCircle, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import * as client from "../../../../Users/client";
+import * as client from "../../../client";
+import * as usersClient from "../../../../Users/client";
 import { RootState } from "../../../../store";
 
 interface User {
@@ -40,7 +41,7 @@ export default function PeopleTable() {
   });
 
   const fetchUsers = useCallback(async () => {
-    const enrolledUsers = await client.findUsersEnrolledInCourse(cid as string);
+    const enrolledUsers = await client.findUsersForCourse(cid as string);
     setUsers(enrolledUsers);
   }, [cid]);
 
@@ -79,9 +80,9 @@ export default function PeopleTable() {
   const handleSaveUser = async () => {
     try {
       if (editingUser) {
-        await client.updateUser({ ...editingUser, ...formData });
+        await usersClient.updateUser({ ...editingUser, ...formData });
       } else {
-        await client.createUser(formData);
+        await usersClient.createUser(formData);
       }
       setShowModal(false);
       fetchUsers();
@@ -94,7 +95,7 @@ export default function PeopleTable() {
   const handleDeleteUser = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
-      await client.deleteUser(userId);
+      await usersClient.deleteUser(userId);
       fetchUsers();
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -214,6 +215,7 @@ export default function PeopleTable() {
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
             >
               <option value="STUDENT">Student</option>
+              <option value="TA">TA</option>
               <option value="FACULTY">Faculty</option>
               <option value="ADMIN">Admin</option>
             </FormControl>

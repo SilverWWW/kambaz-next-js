@@ -112,7 +112,7 @@ export default function PeopleDetails({
       ) : (
         <select
           className="form-select d-inline-block w-auto ms-2"
-          value={user.role || ""}
+          value={user.role || "STUDENT"}
           onChange={(e) => setUser({ ...user, role: e.target.value })}
         >
           <option value="STUDENT">Students</option>

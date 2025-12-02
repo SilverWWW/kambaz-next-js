@@ -55,24 +55,25 @@ export default function AssignmentEditor() {
       return;
     }
 
-    if (isEditing) {
-      const updatedAssignment = await client.updateAssignment({
-        ...assignment,
-        course: cid,
-      });
-      const newAssignments = assignments.map((a: any) =>
-        a._id === updatedAssignment._id ? updatedAssignment : a
-      );
-      dispatch(setAssignments(newAssignments));
-    } else {
-      const newAssignment = await client.createAssignmentForCourse(cid as string, {
-        ...assignment,
-        course: cid,
-      });
-      dispatch(setAssignments([...assignments, newAssignment]));
+    try {
+      if (isEditing) {
+        await client.updateAssignment({
+          ...assignment,
+          course: cid,
+        });
+      } else {
+        await client.createAssignmentForCourse(cid as string, {
+          ...assignment,
+          course: cid,
+        });
+      }
+      const updatedAssignments = await client.findAssignmentsForCourse(cid as string);
+      dispatch(setAssignments(updatedAssignments));
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+      alert("Failed to save assignment. Please try again.");
     }
-
-    router.push(`/Courses/${cid}/Assignments`);
   };
 
   const handleCancel = () => {

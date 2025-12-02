@@ -54,16 +54,19 @@ export default function EditAssignment() {
   }, [aid]);
 
   const handleSave = async () => {
-    const updatedAssignment = await client.updateAssignment({
-      _id: aid as string,
-      ...formData,
-      course: cid,
-    });
-    const newAssignments = assignments.map((a: any) =>
-      a._id === updatedAssignment._id ? updatedAssignment : a
-    );
-    dispatch(setAssignments(newAssignments));
-    router.push(`/Courses/${cid}/Assignments`);
+    try {
+      await client.updateAssignment({
+        _id: aid as string,
+        ...formData,
+        course: cid,
+      });
+      const updatedAssignments = await client.findAssignmentsForCourse(cid as string);
+      dispatch(setAssignments(updatedAssignments));
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error("Error saving assignment:", error);
+      alert("Failed to save assignment. Please try again.");
+    }
   };
 
   useEffect(() => {

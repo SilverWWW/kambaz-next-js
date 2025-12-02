@@ -43,6 +43,7 @@ export default function Dashboard() {
   );
   const dispatch = useDispatch();
   const [showAllCourses, setShowAllCourses] = useState(false);
+  const [allCourses, setAllCourses] = useState<Course[]>([]);
   const [course, setCourse] = useState<Course>({
     _id: "0",
     name: "New Course",
@@ -70,6 +71,23 @@ export default function Dashboard() {
     }
   }, [currentUser, dispatch]);
 
+  const fetchAllCourses = useCallback(async () => {
+    if (!currentUser) {
+      setAllCourses([]);
+      return;
+    }
+    try {
+      const courses = await client.fetchAllCourses();
+      setAllCourses(courses);
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        setAllCourses([]);
+      } else {
+        console.error(error);
+      }
+    }
+  }, [currentUser]);
+
   const fetchEnrollments = useCallback(async () => {
     if (!currentUser) {
       dispatch(setEnrollments([]));
@@ -90,7 +108,10 @@ export default function Dashboard() {
   useEffect(() => {
     fetchCourses();
     fetchEnrollments();
-  }, [fetchCourses, fetchEnrollments]);
+    if (showAllCourses) {
+      fetchAllCourses();
+    }
+  }, [fetchCourses, fetchEnrollments, fetchAllCourses, showAllCourses]);
 
   const onAddNewCourse = async () => {
     const newCourse = await client.createCourse(course);
@@ -115,32 +136,43 @@ export default function Dashboard() {
 
   const isUserEnrolled = (courseId: string) => {
     if (!currentUser) return false;
-    return enrollments.some(
+    if (currentUser.role === "FACULTY") return true;
+    const isInCourses = courses.some((course: Course) => course._id === courseId);
+    const isInEnrollments = enrollments.some(
       (enrollment: Enrollment) =>
         enrollment.user === currentUser._id && enrollment.course === courseId
     );
+    return isInCourses || isInEnrollments;
   };
 
   const handleEnrollToggle = async (courseId: string) => {
     if (!currentUser) return;
 
-    if (isUserEnrolled(courseId)) {
-      await enrollmentsClient.unenrollUserFromCourse(currentUser._id, courseId);
-      dispatch(setEnrollments(
-        enrollments.filter(
-          (e: Enrollment) => !(e.user === currentUser._id && e.course === courseId)
-        )
-      ));
-    } else {
-      const newEnrollment = await enrollmentsClient.enrollUserInCourse(currentUser._id, courseId);
-      dispatch(setEnrollments([...enrollments, newEnrollment]));
+    try {
+      if (isUserEnrolled(courseId)) {
+        await client.unenrollFromCourse(currentUser._id, courseId);
+      } else {
+        await client.enrollIntoCourse(currentUser._id, courseId);
+      }
+      await fetchCourses();
+      await fetchEnrollments();
+      if (showAllCourses) {
+        await fetchAllCourses();
+      }
+    } catch (error: any) {
+      console.error("Enrollment error:", error);
     }
   };
 
   const getFilteredCourses = () => {
     if (!currentUser) return courses;
-    if (showAllCourses) return courses;
-    return courses;
+    
+    const coursesToShow = showAllCourses ? allCourses : courses;
+    
+    const uniqueCourses = coursesToShow.filter((course: Course, index: number, self: Course[]) =>
+      index === self.findIndex((c: Course) => c._id === course._id)
+    );
+    return uniqueCourses;
   };
 
   const hashStringToColor = (str: string) => {
@@ -243,9 +275,7 @@ export default function Dashboard() {
                     {course.description}
                   </CardText>
 
-                  {/* Course Actions */}
                   <div className="d-flex flex-column gap-2">
-                    {/* Navigation Button - Only if enrolled or faculty */}
                     {isUserEnrolled(course._id) ||
                     (currentUser && currentUser.role === "FACULTY") ? (
                       <Link
@@ -262,7 +292,6 @@ export default function Dashboard() {
                       </Button>
                     )}
 
-                    {/* Enrollment Controls - Only in enrollments view */}
                     {showAllCourses && currentUser && (
                       <Button
                         variant={
@@ -278,7 +307,6 @@ export default function Dashboard() {
                       </Button>
                     )}
 
-                    {/* Faculty Controls */}
                     {currentUser && currentUser.role === "FACULTY" && (
                       <div className="d-flex gap-1">
                         <Button
